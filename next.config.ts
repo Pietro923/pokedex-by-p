@@ -1,7 +1,16 @@
-import type { NextConfig } from "next";
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  images: {
+    domains: ['raw.githubusercontent.com']
+  },
+  async rewrites() {
+    return [
+      {
+        source: '/api/:path*',
+        destination: 'https://pokeapi.co/api/v2/:path*'
+      }
+    ]
+  }
+}
 
-const nextConfig: NextConfig = {
-  /* config options here */
-};
-
-export default nextConfig;
+module.exports = nextConfig
