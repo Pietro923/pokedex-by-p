@@ -1,6 +1,6 @@
 'use client'
 import { useState, useEffect } from 'react'
-import axios from 'axios'
+import { fetchPokemon } from '../services/pokedex'
 
 interface Pokemon {
   name: string
@@ -12,24 +12,19 @@ export default function Home() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const fetchPokemon = async () => {
-      try {
-        const response = await axios.get<{results: Pokemon[]}>('https://pokeapi.co/api/v2/pokemon?limit=40')
-        setPokemon(response.data.results)
-        setLoading(false)
-      } catch (error) {
-        console.error('Error fetching Pokémon', error)
-        setLoading(false)
-      }
+    const loadPokemon = async () => {
+      const data = await fetchPokemon()
+      setPokemon(data)
+      setLoading(false)
     }
-    fetchPokemon()
+    loadPokemon()
   }, [])
 
   if (loading) return <div>Cargando...</div>
 
   return (
     <main>
-      <h1>Pokédex</h1>
+      <h1>Pokédex de Pietro</h1>
       {pokemon.map((p, index) => (
         <div key={index}>{p.name}</div>
       ))}
