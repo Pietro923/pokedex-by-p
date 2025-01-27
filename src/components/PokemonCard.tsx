@@ -8,18 +8,29 @@ interface PokemonCardProps {
     sprites?: {
       front_default: string;
     };
-    url: string; // Agregamos la URL para obtener más detalles
+    url: string;
   };
+}
+
+interface PokemonDetails {
+  name: string;
+  sprites: {
+    front_default: string;
+  };
+  height: number;
+  weight: number;
+  types: { type: { name: string } }[];
+  abilities: { ability: { name: string } }[];
 }
 
 export default function PokemonCard({ pokemon }: PokemonCardProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [pokemonDetails, setPokemonDetails] = useState<any>(null);
+  const [pokemonDetails, setPokemonDetails] = useState<PokemonDetails | null>(null);
 
   const fetchPokemonDetails = async () => {
     try {
       const response = await fetch(pokemon.url);
-      const data = await response.json();
+      const data: PokemonDetails = await response.json();
       setPokemonDetails(data);
     } catch (error) {
       console.error('Error fetching Pokémon details:', error);
@@ -79,7 +90,7 @@ export default function PokemonCard({ pokemon }: PokemonCardProps) {
               <div>
                 <h3 className="font-semibold">Tipos:</h3>
                 <ul className="list-disc list-inside">
-                  {pokemonDetails.types.map((type: any, index: number) => (
+                  {pokemonDetails.types.map((type, index) => (
                     <li key={index} className="capitalize">
                       {type.type.name}
                     </li>
@@ -89,7 +100,7 @@ export default function PokemonCard({ pokemon }: PokemonCardProps) {
               <div>
                 <h3 className="font-semibold">Habilidades:</h3>
                 <ul className="list-disc list-inside">
-                  {pokemonDetails.abilities.map((ability: any, index: number) => (
+                  {pokemonDetails.abilities.map((ability, index) => (
                     <li key={index} className="capitalize">
                       {ability.ability.name}
                     </li>
